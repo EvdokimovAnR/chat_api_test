@@ -16,10 +16,10 @@ Django Chat API — это REST API для управления чатами и 
 ```bash
 # 1. Клонируйте репозиторий
 git clone https://github.com/EvdokimovAnR/chat_api_test.git
-cd chat-api_test
+cd chat_api_test
 
 # 2. Создайте файл окружения
-cp .env
+cp .env.example .env
 
 # 3. Запустите через Docker Compose
 docker-compose up --build
@@ -175,8 +175,8 @@ DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 
 # PostgreSQL
-POSTGRES_DB=chatdb
-POSTGRES_USER=user
+POSTGRES_DB=chat_db
+POSTGRES_USER=chat_user
 POSTGRES_PASSWORD=password
 POSTGRES_HOST=db        # для Docker
 POSTGRES_HOST=localhost # для запуска без Docker
