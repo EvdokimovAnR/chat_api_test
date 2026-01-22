@@ -70,7 +70,7 @@ API Endpoints: http://localhost:8000/api/chats/
 - Chat: id, title (1-200 символов), created_at
 - Message: id, chat_id (FK), text (1-5000 символов), created_at
 
-#### Эндпоинты:
+### Эндпоинты:
 #### 1. Создание чата
 POST /api/chats/
 ```
@@ -103,3 +103,82 @@ title: не пустой, 1-200 символов, обрезка пробело�
 text: не пустой, 1-5000 символов
 
 404 ошибка при попытке отправить сообщение в несуществующий чат
+
+### Управление Docker:
+#### Основные команды
+```
+# Запуск в фоновом режиме
+docker-compose up -d
+
+# Остановка
+docker-compose down
+
+# Остановка с удалением данных БД
+docker-compose down -v
+
+# Перезапуск
+docker-compose restart
+
+# Просмотр логов
+docker-compose logs -f
+docker-compose logs -f web  # логи Django
+docker-compose logs -f db   # логи PostgreSQL
+```
+
+#### Команды Django внутри контейнера
+```
+# Миграции
+docker-compose exec web python manage.py makemigrations
+docker-compose exec web python manage.py migrate
+
+# Администратор
+docker-compose exec web python manage.py createsuperuser
+
+# Тестирование
+docker-compose exec web python manage.py test chats
+
+# Django shell
+docker-compose exec web python manage.py shell
+```
+
+### Тестирование
+```
+# Запуск всех тестов
+docker-compose exec web python manage.py test
+
+# Запуск тестов приложения chats
+docker-compose exec web python manage.py test chats
+
+# Тестирование без Docker
+python manage.py test chats
+```
+
+### Пример тестового запроса
+```
+# Создание чата
+curl -X POST http://localhost:8000/api/chats/ \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Тестовый чат"}'
+
+# Отправка сообщения
+curl -X POST http://localhost:8000/api/chats/1/messages/ \
+  -H "Content-Type: application/json" \
+  -d '{"text":"Привет, мир!"}'
+```
+
+### Конфигурация
+#### Файл окружения (.env)
+```
+# Django
+SECRET_KEY=ваш-секретный-ключ
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# PostgreSQL
+POSTGRES_DB=chatdb
+POSTGRES_USER=user
+POSTGRES_PASSWORD=password
+POSTGRES_HOST=db        # для Docker
+POSTGRES_HOST=localhost # для запуска без Docker
+POSTGRES_PORT=5432
+```
